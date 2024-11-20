@@ -33,6 +33,7 @@ if (foundCity == null){
 } else {
     h2.textContent = userCity + " (" + foundCity.country  + ")"; 
     document.title = userCity;
+    
 }
 
 
@@ -57,6 +58,7 @@ if (foundCity != null){
     
     for (let city of cities){
         let cityClass = "";
+        let city
         if (city.name == userCity){
             cityClass = "target";
         } else if (city.id == closestCity.id){
@@ -75,9 +77,27 @@ if (foundCity == null){
 /*
 tableDiv.innerHTML += `<div class="cell"></div>`
 
-    }
-    citiesDiv.innerHTML += `<p class="cityBox ${cityClass}">${city.name}</p>`;
+for (let city of cities) {
+    tableDiv.innerHTML += `<div class="cell head_row">${city.id}</div>`
 }
+
+// Skapa tabellrader
+for (let city of cities) {
+    tableDiv.innerHTML += `<div class="cell head_column">${city.id}-${city.name}</div>`
+    for (let otherCity of cities) {
+        let distance = "";
+        for (let keys of distances) {
+            if ((keys.city1 == city.id && keys.city2 == otherCity.id) || 
+                (keys.city1 == otherCity.id && keys.city2 == city.id)) {
+                distance = keys.distance / 10;
+                break;
+            }
+        }
+        tableDiv.innerHTML += `<div class="cell">${distance}</div>`
+    }
+    tableDiv.innerHTML += `<div class="cell"></div>`
+}
+*/
 
 tableDiv.innerHTML = `<p class="cell"></p>`
 
@@ -85,14 +105,16 @@ for (let city of cities){
     tableDiv.innerHTML += `<p class="cell head_row">${city.id}</p>`;
 }
 for (let city of cities){
-    tableDiv.innerHTML += `<p class="cell head_col">${city.id}-${city.name}</p>`;
-    tableDiv.innerHTML += `<p class="cell"></p>`;
+    let classForEvenRow = ""
+    if(city.id % 2 == 0){
+        classForEvenRow = "even_row"
+    }
+    tableDiv.innerHTML += `<p class="cell head_col ${classForEvenRow}">${city.id}-${city.name}</p>`;
+    tableDiv.innerHTML += `<p class="cell ${classForEvenRow}"></p>`;
     for (let keys of distances){
-        const cellP = document.createElement("p");
         if (keys.city1 == city.id || keys.city2 == city.id){
-            tableDiv.appendChild(cellP);
-            cellP.classList.add("cell");
-            cellP.textContent = keys.distance / 10;
+            
+            tableDiv.innerHTML += `<p class="cell ${classForEvenRow}">${keys.distance / 10}</p>`;
         }
     }
 }
