@@ -58,7 +58,6 @@ if (foundCity != null){
     
     for (let city of cities){
         let cityClass = "";
-        let city
         if (city.name == userCity){
             cityClass = "target";
         } else if (city.id == closestCity.id){
@@ -74,47 +73,33 @@ if (foundCity == null){
         citiesDiv.innerHTML += `<p class="cityBox">${city.name}</p>`;
     }
 }
-/*
-tableDiv.innerHTML += `<div class="cell"></div>`
-
-for (let city of cities) {
-    tableDiv.innerHTML += `<div class="cell head_row">${city.id}</div>`
-}
-
-// Skapa tabellrader
-for (let city of cities) {
-    tableDiv.innerHTML += `<div class="cell head_column">${city.id}-${city.name}</div>`
-    for (let otherCity of cities) {
-        let distance = "";
-        for (let keys of distances) {
-            if ((keys.city1 == city.id && keys.city2 == otherCity.id) || 
-                (keys.city1 == otherCity.id && keys.city2 == city.id)) {
-                distance = keys.distance / 10;
-                break;
-            }
-        }
-        tableDiv.innerHTML += `<div class="cell">${distance}</div>`
-    }
-    tableDiv.innerHTML += `<div class="cell"></div>`
-}
-*/
 
 tableDiv.innerHTML = `<p class="cell"></p>`
 
+
 for (let city of cities){
+    
     tableDiv.innerHTML += `<p class="cell head_row">${city.id}</p>`;
 }
-for (let city of cities){
+
+for (let cityRow of cities){
     let classForEvenRow = ""
-    if(city.id % 2 == 0){
+    if(cityRow.id % 2 == 0){
         classForEvenRow = "even_row"
     }
-    tableDiv.innerHTML += `<p class="cell head_col ${classForEvenRow}">${city.id}-${city.name}</p>`;
-    tableDiv.innerHTML += `<p class="cell ${classForEvenRow}"></p>`;
-    for (let keys of distances){
-        if (keys.city1 == city.id || keys.city2 == city.id){
-            
-            tableDiv.innerHTML += `<p class="cell ${classForEvenRow}">${keys.distance / 10}</p>`;
+    tableDiv.innerHTML += `<p class="cell head_col ${classForEvenRow}">${cityRow.id}-${cityRow.name}</p>`;
+   
+    for(let cityColumn of cities){
+        let classForEvenCol = " "
+        if(cityColumn.id % 2 == 0){
+            classForEvenCol = "even_col"
+        }
+        if(cityRow.id == cityColumn.id){
+            tableDiv.innerHTML += `<p class="cell ${classForEvenRow} ${classForEvenCol}"></p>`;
+        } else {
+            // Hitta distansen mellan city och city2
+            let match = distances.filter(d => d.city1 == cityRow.id && d.city2 == cityColumn.id || d.city1 == cityColumn.id && d.city2 == cityRow.id)[0]
+            tableDiv.innerHTML += `<p class="cell ${classForEvenRow} ${classForEvenCol}">${match.distance / 10}</p>`;
         }
     }
 }
