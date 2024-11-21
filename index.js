@@ -8,22 +8,6 @@ function allCities (whichCity) {
     return null;
 }
 
-function fFindDistancesFromCity (cityId){
-    return distances.filter(d => d.city == cityId || d.city2 == cityId)
-}
-
-function getCityById (id) {
-    return cities.find(city => city.id == id)
-}
-function findDistance(city1, city2) {
-    for (let keys of distances) {
-        if ((keys.city1 == city1 && keys.city2 == city2) || (keys.city1 == city2 && keys.city2 == city1)) {
-            return keys.distance;
-        }
-    }
-    return null;
-}
-
 // Recommended: constants with references to existing HTML-elements
 const citiesDiv = document.getElementById("cities");
 const h2 = document.querySelector("h2");
@@ -52,14 +36,14 @@ let maxDistance = 0;
 if (foundCity != null){
     for (let d of distances){
     const otherCityId = d.city1 == foundCity.id ? d.city2 : d.city1;
-    const otherCity = getCityById(otherCityId);
-        if (d.distance < minDistance){
-            minDistance = d.distance;
-            closestCity = otherCity;
+    const distance = d.distance;
+        if (distance < minDistance){
+            minDistance = distance;
+            closestCity = cities.find(city => city.id == otherCityId);
         }
-        if (d.distance > maxDistance){
-            maxDistance = d.distance;
-            furthestCity = otherCity;
+        if (distance > maxDistance){
+            maxDistance = distance;
+            furthestCity = cities.find(city => city.id == otherCityId);
         }
     }
     h3.textContent = `Av städerna i databasen ligger ${closestCity.name} närmast och ${furthestCity.name} längst bort`;
@@ -71,12 +55,10 @@ if (foundCity != null){
             cityClass = "target";
         } else if (city.id == closestCity.id){
             cityClass = "closest";
-            const distance = findDistance(city.id, foundCity.id);
-            distanceInfo = `ligger ${distance / 10} mil bort`
+            distanceInfo = `ligger ${minDistance / 10} mil bort`
         } else if (city.id == furthestCity.id){
             cityClass = "furthest";
-            const distance = findDistance(city.id, foundCity.id);
-            distanceInfo = `ligger ${distance / 10} mil bort`
+            distanceInfo = `ligger ${maxDistance / 10} mil bort`
         }
         citiesDiv.innerHTML += `<p class="cityBox ${cityClass}">${city.name} ${distanceInfo}</p>`;
     }
