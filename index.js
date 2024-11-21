@@ -15,6 +15,14 @@ function fFindDistancesFromCity (cityId){
 function getCityById (id) {
     return cities.find(city => city.id == id)
 }
+function findDistance(city1, city2) {
+    for (let keys of distances) {
+        if ((keys.city1 == city1 && keys.city2 == city2) || (keys.city1 == city2 && keys.city2 == city1)) {
+            return keys.distance;
+        }
+    }
+    return null;
+}
 
 // Recommended: constants with references to existing HTML-elements
 const citiesDiv = document.getElementById("cities");
@@ -58,14 +66,19 @@ if (foundCity != null){
     
     for (let city of cities){
         let cityClass = "";
+        let distanceInfo = "";
         if (city.name == userCity){
             cityClass = "target";
         } else if (city.id == closestCity.id){
             cityClass = "closest";
+            const distance = findDistance(city.id, foundCity.id);
+            distanceInfo = `ligger ${distance / 10} mil bort`
         } else if (city.id == furthestCity.id){
             cityClass = "furthest";
+            const distance = findDistance(city.id, foundCity.id);
+            distanceInfo = `ligger ${distance / 10} mil bort`
         }
-        citiesDiv.innerHTML += `<p class="cityBox ${cityClass}">${city.name}</p>`;
+        citiesDiv.innerHTML += `<p class="cityBox ${cityClass}">${city.name} ${distanceInfo}</p>`;
     }
 }
 if (foundCity == null){
