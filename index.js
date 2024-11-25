@@ -16,10 +16,19 @@ function getCityById (matchingId){
     }
 }
 
+function findDistances (cityColumn, cityRow) {
+    for (let d of distances) {
+        if ((d.city1 == cityRow.id && d.city2 == cityColumn.id) || (d.city1 == cityColumn.id && d.city2 == cityRow.id)){
+            return d;
+        }
+    }
+}
+
+
 // Recommended: constants with references to existing HTML-elements
 const citiesDiv = document.getElementById("cities");
 const h2 = document.querySelector("h2");
-const h3 = document.querySelector("h3")
+const h3 = document.querySelector("h3");
 const tableDiv = document.getElementById("table");
 
 // Recommended: Ask for the city name and then the rest of the code
@@ -98,7 +107,7 @@ for (let cityRow of cities){
     if(cityRow.id % 2 == 0){
         classForEvenRow = "even_row"
     }
-    tableDiv.innerHTML += `<p class="cell head_col ${classForEvenRow}">${cityRow.id}-${cityRow.name}</p>`;
+    tableDiv.innerHTML += `<p class="cell head_column ${classForEvenRow}">${cityRow.id}-${cityRow.name}</p>`;
    
     for(let cityColumn of cities){
         let classForEvenCol = " "
@@ -108,8 +117,7 @@ for (let cityRow of cities){
         if(cityRow.id == cityColumn.id){
             tableDiv.innerHTML += `<p class="cell ${classForEvenRow} ${classForEvenCol}"></p>`;
         } else {
-            // Hitta distansen mellan city och city2
-            let match = distances.filter(d => d.city1 == cityRow.id && d.city2 == cityColumn.id || d.city1 == cityColumn.id && d.city2 == cityRow.id)[0]
+            let match = findDistances(cityColumn, cityRow);
             tableDiv.innerHTML += `<p class="cell ${classForEvenRow} ${classForEvenCol}">${match.distance / 10}</p>`;
         }
     }
