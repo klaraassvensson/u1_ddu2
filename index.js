@@ -8,6 +8,14 @@ function allCities (whichCity) {
     return null;
 }
 
+function getCityById (matchingId){
+    for (let city of cities){
+        if (city.id == matchingId){
+            return city;
+        }
+    }
+}
+
 // Recommended: constants with references to existing HTML-elements
 const citiesDiv = document.getElementById("cities");
 const h2 = document.querySelector("h2");
@@ -34,19 +42,26 @@ let maxDistance = 0;
 if (foundCity != null){
     for (let d of distances){
         if (d.city1 == foundCity.id || d.city2 == foundCity.id) {
-            const otherCityId = d.city1 == foundCity.id ? d.city2 : d.city1;
-            const distance = d.distance;
-                if (distance < minDistance){
-                    minDistance = distance;
-                    closestCity = cities.find(city => city.id == otherCityId);
-                }
-                if (distance > maxDistance){
-                    maxDistance = distance;
-                    furthestCity = cities.find(city => city.id == otherCityId);
-                }
+            let otherCityId = null; 
+            let otherCity = null;
+            if (d.city1 == foundCity.id){
+                otherCityId = d.city2;
+            } else {
+                otherCityId = d.city1;
             }
-
+            otherCity = getCityById(otherCityId);
+            const distance = d.distance;
+            if (distance < minDistance){
+                minDistance = distance;
+                closestCity = otherCity;
+            }
+            if (distance > maxDistance){
+                maxDistance = distance;
+                furthestCity = otherCity;
+            }
         }
+
+    }
     h3.textContent = `Av städerna i databasen ligger ${closestCity.name} närmast och ${furthestCity.name} längst bort`;
     
     for (let city of cities){
